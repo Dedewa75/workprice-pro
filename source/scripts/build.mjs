@@ -39,6 +39,9 @@ const html = `<!doctype html>
 <meta name="description" content="WORKPRICE PRO — calcul de tarifs, devis et factures pour indépendants et entreprises." />
 <title>WORKPRICE PRO</title>
 <link rel="icon" href="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#7c5cff"/><path d="M6 10l4 12 6-11 6 11 4-12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>')}" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
 <script>try{var d=JSON.parse(localStorage.getItem('workprice-pro:v1:default')||'{}').settings;if(d){document.documentElement.dataset.theme=d.theme||'dark';if(d.accentColor)document.documentElement.style.setProperty('--wp-accent',d.accentColor)}}catch(e){}</script>
@@ -47,9 +50,11 @@ const html = `<!doctype html>
 <body>
 <div id="root"></div>
 <noscript>WORKPRICE PRO nécessite JavaScript.</noscript>
+<script>if("serviceWorker" in navigator&&location.protocol==="https:")addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));</script>
 <script>${code.replace(/<\/script/gi, '<\\/script')}</script>
 </body>
 </html>`;
 fs.mkdirSync(path.join(root, 'dist'), { recursive: true });
 fs.writeFileSync(path.join(root, 'dist/index.html'), html);
+for (const f of fs.readdirSync(path.join(root, 'public'))) fs.copyFileSync(path.join(root, 'public', f), path.join(root, 'dist', f));
 console.log(`dist/index.html — ${(html.length / 1024).toFixed(0)} Ko (css ${(css.length / 1024).toFixed(0)} Ko, js ${(code.length / 1024).toFixed(0)} Ko)`);
